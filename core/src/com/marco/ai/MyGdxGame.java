@@ -7,7 +7,8 @@ import com.marco.ai.Screens.WorldScreen;
 public class MyGdxGame extends Game {
 	private SpriteBatch batch;
 	public static int V_WIDTH = 800;
-	public static int V_HEIGHT = 600;
+	public static int V_HEIGHT = 480;
+	public static int SCROLL_VELOCITY = 200;
 
 	public MyGdxGame() {
 	}

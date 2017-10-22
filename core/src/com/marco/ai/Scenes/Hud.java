@@ -20,7 +20,9 @@ public class Hud {
     private Stage stage;
     private Viewport vp;
 
-    private Label someLabel;
+    private float[] camPositionValue;
+
+    private Label camPosition;
     private Label someother;
     private Label somemore;
 
@@ -32,11 +34,13 @@ public class Hud {
         table.top();
         table.setFillParent(true);
 
-        someLabel = new Label("Hello World!", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        someother = new Label("Hello World! 2", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        somemore = new Label("Hello World! 3", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        camPositionValue = new float[2];
 
-        table.add(someLabel).expandX().padTop(10);
+        camPosition = new Label("CamPosition: ", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        someother = new Label("", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        somemore = new Label("", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+
+        table.add(camPosition).expandX().padTop(10);
         table.add(someother).expandX().padTop(10);
         table.add(somemore).expandX().padTop(10);
         table.row();
@@ -44,7 +48,23 @@ public class Hud {
         stage.addActor(table);
     }
 
+    public void updateCamPosition(float x, float y) {
+        camPositionValue[0] = x;
+        camPositionValue[1] = y;
+    }
+
+    public void update() {
+        camPosition.setText(String.format("CamPosition: %.2f,%.2f", camPositionValue[0],camPositionValue[1]));
+        someother.setText("Hello");
+        somemore.setText("World!");
+    }
+
     public Stage getStage() {
         return stage;
     }
+
+//    @Override
+//    public void dispose() {
+//        stage.dispose();
+//    }
 }
