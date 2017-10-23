@@ -1,5 +1,6 @@
 package com.marco.ai.Screens;
 
+import com.marco.ai.Actors.Actor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +17,8 @@ import com.marco.ai.GameMap;
 import com.marco.ai.MyGdxGame;
 import com.marco.ai.Scenes.Hud;
 
+import java.util.ArrayList;
+
 /**
  * Created by marco on 22/10/17.
  */
@@ -31,6 +34,8 @@ public class WorldScreen implements Screen{
 
     // Level
     private GameMap map;
+
+    private ArrayList<Actor> actors;
 
 
     public WorldScreen(SpriteBatch sb) {
@@ -49,6 +54,9 @@ public class WorldScreen implements Screen{
 
         map.setupColisionObjects();
 
+        actors = new ArrayList<>();
+        Actor actor = new Actor(100,100, 10);
+        actor.setBody(map.getNewBody(actor.getBdef()));
     }
 
     @Override

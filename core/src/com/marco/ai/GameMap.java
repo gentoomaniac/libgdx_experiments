@@ -16,6 +16,7 @@ import com.marco.ai.Screens.WorldScreen;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 /**
  * Created by marco on 22/10/17.
  */
@@ -96,5 +97,9 @@ public class GameMap {
                 body.createFixture(fdef);
             }
         }
+    }
+
+    public Body getNewBody(BodyDef bdef) {
+        return box2dWorld.createBody(bdef);
     }
 }
