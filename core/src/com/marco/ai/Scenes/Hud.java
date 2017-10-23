@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.marco.ai.MyGdxGame;
@@ -21,9 +20,10 @@ public class Hud {
     private Viewport vp;
 
     private float[] camPositionValue;
+    private float[] cursorPositionValue;
 
     private Label camPosition;
-    private Label someother;
+    private Label cursorPosition;
     private Label somemore;
 
     public Hud(SpriteBatch sb){
@@ -34,14 +34,15 @@ public class Hud {
         table.top();
         table.setFillParent(true);
 
-        camPositionValue = new float[2];
+        camPositionValue = new float[] {0, 0};
+        cursorPositionValue = new float[] {0, 0};
 
         camPosition = new Label("CamPosition: ", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        someother = new Label("", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        cursorPosition = new Label("CamPosition: ", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         somemore = new Label("", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
         table.add(camPosition).expandX().padTop(10);
-        table.add(someother).expandX().padTop(10);
+        table.add(cursorPosition).expandX().padTop(10);
         table.add(somemore).expandX().padTop(10);
         table.row();
 
@@ -53,9 +54,14 @@ public class Hud {
         camPositionValue[1] = y;
     }
 
+    public void updateCurserPosition(float x, float y) {
+        cursorPositionValue[0] = x;
+        cursorPositionValue[1] = y;
+    }
+
     public void update() {
         camPosition.setText(String.format("CamPosition: %.2f,%.2f", camPositionValue[0],camPositionValue[1]));
-        someother.setText("Hello");
+        cursorPosition.setText(String.format("CursorPosition: %.2f,%.2f", cursorPositionValue[0],cursorPositionValue[1]));
         somemore.setText("World!");
     }
 

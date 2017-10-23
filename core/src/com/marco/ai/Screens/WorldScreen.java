@@ -1,8 +1,5 @@
 package com.marco.ai.Screens;
 
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.World;
-import com.marco.ai.GameMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import com.marco.ai.GameMap;
 import com.marco.ai.MyGdxGame;
 import com.marco.ai.Scenes.Hud;
 
@@ -34,9 +32,6 @@ public class WorldScreen implements Screen{
     // Level
     private GameMap map;
 
-    // Colision detection
-    private World box2dWorld;
-    private Box2DDebugRenderer b2dr;
 
     public WorldScreen(SpriteBatch sb) {
         batch = sb;
@@ -51,6 +46,9 @@ public class WorldScreen implements Screen{
 
         // set camera initially to the lower left corner
         cam.position.set(vp.getWorldWidth()/2, vp.getWorldHeight()/2, 0);
+
+        map.setupColisionObjects();
+
     }
 
     @Override
@@ -93,6 +91,7 @@ public class WorldScreen implements Screen{
             else
                 cam.position.y -= diff;
         }
+        hud.updateCurserPosition(Gdx.input.getX(), Gdx.input.getY());
     }
 
     @Override
@@ -102,7 +101,10 @@ public class WorldScreen implements Screen{
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        map.render();
+        map.renderMap();
+
+        map.renderBox2d(cam);
+
         batch.setProjectionMatrix(hud.getStage().getCamera().combined);
         hud.getStage().draw();
     }
