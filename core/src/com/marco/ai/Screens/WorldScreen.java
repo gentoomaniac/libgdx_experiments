@@ -1,6 +1,7 @@
 package com.marco.ai.Screens;
 
-import com.marco.ai.Actors.Actor;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.marco.ai.Actors.ActorInterface;
 import com.marco.ai.Actors.KeyboardActor;
 import org.slf4j.Logger;
@@ -75,41 +76,65 @@ public class WorldScreen implements Screen{
             a.action();
         }
 
+        if (selectedActor != null ) {
+            cam.position.set(selectedActor.getPosition(), 0);
+            hud.setSelectedActorVelocity(selectedActor.getLinearVelocity());
+        }
+        cam.update();
+
+        map.setView(cam);
         map.update();
 
-        cam.update();
-        map.setView(cam);
         hud.updateCamPosition(cam.position.x, cam.position.y);
-        hud.setSelectedActorVelocity(selectedActor.getLinearVelocity());
         hud.update();
     }
 
     public void handleInput(float dt) {
         float diff = MyGdxGame.SCROLL_VELOCITY * dt;
 
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT)) {
-            if (cam.position.x + diff > MyGdxGame.scaleToPPM(map.getWidth()) - vp.getWorldWidth()/2 + MyGdxGame.SCROLLOVER)
-                cam.position.x = MyGdxGame.scaleToPPM(map.getWidth()) - vp.getWorldWidth()/2 + MyGdxGame.SCROLLOVER;
-            else
-                cam.position.x += diff;
-        } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT)) {
-            if (cam.position.x - diff < vp.getWorldWidth() / 2 - MyGdxGame.SCROLLOVER)
-                cam.position.x = vp.getWorldWidth() / 2 - MyGdxGame.SCROLLOVER;
-            else
-                cam.position.x -= diff;
+        // if no Actor is set for tracking
+        if (selectedActor == null) {
+            if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT)) {
+                if (cam.position.x + diff > MyGdxGame.scaleToPPM(map.getWidth()) - vp.getWorldWidth()/2 + MyGdxGame.SCROLLOVER)
+                    cam.position.x = MyGdxGame.scaleToPPM(map.getWidth()) - vp.getWorldWidth()/2 + MyGdxGame.SCROLLOVER;
+                else
+                    cam.position.x += diff;
+            } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT)) {
+                if (cam.position.x - diff < vp.getWorldWidth() / 2 - MyGdxGame.SCROLLOVER)
+                    cam.position.x = vp.getWorldWidth() / 2 - MyGdxGame.SCROLLOVER;
+                else
+                    cam.position.x -= diff;
+            }
+            if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.DPAD_UP)) {
+                if (cam.position.y + diff > MyGdxGame.scaleToPPM(map.getHeight()) - vp.getWorldHeight()/2 + MyGdxGame.SCROLLOVER)
+                    cam.position.y = MyGdxGame.scaleToPPM(map.getHeight()) - vp.getWorldHeight()/2 + MyGdxGame.SCROLLOVER;
+                else
+                    cam.position.y += diff;
+            } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.DPAD_DOWN)) {
+                if (cam.position.y - diff < vp.getWorldHeight()/2 - MyGdxGame.SCROLLOVER)
+                    cam.position.y = vp.getWorldHeight()/2 - MyGdxGame.SCROLLOVER;
+                else
+                    cam.position.y -= diff;
+            }
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.DPAD_UP)) {
-            if (cam.position.y + diff > MyGdxGame.scaleToPPM(map.getHeight()) - vp.getWorldHeight()/2 + MyGdxGame.SCROLLOVER)
-                cam.position.y = MyGdxGame.scaleToPPM(map.getHeight()) - vp.getWorldHeight()/2 + MyGdxGame.SCROLLOVER;
-            else
-                cam.position.y += diff;
-        } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.DPAD_DOWN)) {
-            if (cam.position.y - diff < vp.getWorldHeight()/2 - MyGdxGame.SCROLLOVER)
-                cam.position.y = vp.getWorldHeight()/2 - MyGdxGame.SCROLLOVER;
-            else
-                cam.position.y -= diff;
-        }
+
+        // update hud with cursor position
         hud.updateCurserPosition(Gdx.input.getX(), Gdx.input.getY());
+
+        // on touch check if an actor was touched and set/unset selectedActor
+        if(Gdx.input.isTouched()) {
+            selectedActor = null;
+            Vector3 v = cam.unproject(new Vector3(Gdx.input.getX(),Gdx.input.getY(), 0));
+            log.info("Click detected at " + Gdx.input.getX() + "," + Gdx.input.getY() + " mapping to world coordinates " + v.x + "," + v.y);
+            for(ActorInterface act : actors) {
+                log.info("Checking if actor at " + act.getPosition().x + "," + act.getPosition().y + " was clicked ...");
+                if(act.testPoint(v.x, v.y)) {
+                    log.info("Found actor at " + act.getPosition().x + "," + act.getPosition().y);
+                    selectedActor = act;
+                    break;
+                }
+            }
+        }
     }
 
     @Override

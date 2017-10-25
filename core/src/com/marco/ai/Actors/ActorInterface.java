@@ -8,4 +8,6 @@ import com.badlogic.gdx.math.Vector2;
 public interface ActorInterface {
     void action();
     Vector2 getLinearVelocity();
+    Vector2 getPosition();
+    boolean testPoint(float x, float y);
 }

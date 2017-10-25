@@ -2,19 +2,18 @@ package com.marco.ai.Actors;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.*;
 
 /**
  * Created by marco on 23/10/17.
  */
 public class Actor {
 
-    private Sprite sprite;
     Body body;
+    private Sprite sprite;
     private BodyDef bdef;
+    private Fixture fixture;
 
     private float radius;
 
@@ -35,10 +34,11 @@ public class Actor {
 
         shape.setRadius(radius);
         fdef.shape = shape;
-        this.body.createFixture(fdef);
+        fixture = this.body.createFixture(fdef);
     }
 
-    public Vector2 getLinearVelocity() {
-        return body.getLinearVelocity();
-    }
+    public boolean testPoint(Vector3 v) { return testPoint(v.x, v.y); }
+    public boolean testPoint(Vector2 v) { return fixture.testPoint(v); }
+    public boolean testPoint(int x, int y) { return testPoint(((float)x), ((float)y)); }
+    public boolean testPoint(float x, float y) { return fixture.testPoint(x, y); }
 }

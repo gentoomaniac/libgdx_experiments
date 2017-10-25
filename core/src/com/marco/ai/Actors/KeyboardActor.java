@@ -31,7 +31,13 @@ public class KeyboardActor implements ActorInterface {
     }
 
     @Override
-    public Vector2 getLinearVelocity() { return actor.getLinearVelocity(); }
+    public Vector2 getLinearVelocity() { return actor.body.getLinearVelocity(); }
+
+    @Override
+    public Vector2 getPosition() { return actor.body.getPosition(); }
+
+    @Override
+    public boolean testPoint(float x, float y) { return actor.testPoint(x, y); }
 
     @Override
     public void action() {
@@ -42,11 +48,9 @@ public class KeyboardActor implements ActorInterface {
         if ((Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT))
                 && actor.body.getLinearVelocity().x <= 2) {
             actor.body.applyLinearImpulse(new Vector2(1f, 0f), actor.body.getWorldCenter(), true);
-            log.info("moving right with x velocity " + actor.body.getLinearVelocity().x);
         } else if ((Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT))
                 && actor.body.getLinearVelocity().x >= -2) {
             actor.body.applyLinearImpulse(new Vector2(-1f, 0f), actor.body.getWorldCenter(), true);
-            log.info("moving right with x velocity " + actor.body.getLinearVelocity().x);
         }
         if ((Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.DPAD_UP))
                 && actor.body.getLinearVelocity().y <= 2) {
