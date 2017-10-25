@@ -12,29 +12,28 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 public class Actor {
 
     private Sprite sprite;
-    private Body body;
+    Body body;
     private BodyDef bdef;
 
     private float radius;
 
-    public Actor(float posX, float posY, float radius) {
+    public BodyDef getBdef(float posX, float posY) {
         bdef = new BodyDef();
         bdef.position.set(posX, posY);
         bdef.type = BodyDef.BodyType.DynamicBody;
 
-        this.radius = radius;
+        return bdef;
     }
 
-    public BodyDef getBdef() { return bdef; }
-
-    public void setBody(Body b) {
-        body = b;
+    public void setBody(Body body, float radius) {
+        this.body = body;
+        this.radius = radius;
 
         FixtureDef fdef = new FixtureDef();
         CircleShape shape = new CircleShape();
 
         shape.setRadius(radius);
         fdef.shape = shape;
-        body.createFixture(fdef);
+        this.body.createFixture(fdef);
     }
 }

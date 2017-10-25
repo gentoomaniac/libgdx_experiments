@@ -61,7 +61,7 @@ public class Hud {
 
     public void update() {
         camPosition.setText(String.format("CamPosition: %.2f,%.2f", camPositionValue[0],camPositionValue[1]));
-        cursorPosition.setText(String.format("CursorPosition: %.2f,%.2f", cursorPositionValue[0],cursorPositionValue[1]));
+        cursorPosition.setText(String.format("CursorPosition: %.0f,%.0f", cursorPositionValue[0],cursorPositionValue[1]));
         somemore.setText("World!");
     }
 

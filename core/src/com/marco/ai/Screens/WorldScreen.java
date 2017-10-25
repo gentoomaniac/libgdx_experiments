@@ -1,6 +1,6 @@
 package com.marco.ai.Screens;
 
-import com.marco.ai.Actors.Actor;
+import com.marco.ai.Actors.KeyboardActor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +35,7 @@ public class WorldScreen implements Screen{
     // Level
     private GameMap map;
 
-    private ArrayList<Actor> actors;
+    private ArrayList<KeyboardActor> actors;
 
 
     public WorldScreen(SpriteBatch sb) {
@@ -55,8 +55,9 @@ public class WorldScreen implements Screen{
         map.setupColisionObjects();
 
         actors = new ArrayList<>();
-        Actor actor = new Actor(100,100, 10);
-        actor.setBody(map.getNewBody(actor.getBdef()));
+        KeyboardActor keyboardActor = new KeyboardActor();
+        keyboardActor.setBody(map.getNewBody(keyboardActor.getBdef(100f, 100f)), 10f);
+        actors.add(keyboardActor);
     }
 
     @Override
@@ -66,6 +67,9 @@ public class WorldScreen implements Screen{
 
     public void update(float dt) {
         handleInput(dt);
+        for(KeyboardActor a : actors) {
+            a.action();
+        }
 
         cam.update();
         map.setView(cam);
