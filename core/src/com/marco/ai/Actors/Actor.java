@@ -1,6 +1,7 @@
 package com.marco.ai.Actors;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -35,5 +36,9 @@ public class Actor {
         shape.setRadius(radius);
         fdef.shape = shape;
         this.body.createFixture(fdef);
+    }
+
+    public Vector2 getLinearVelocity() {
+        return body.getLinearVelocity();
     }
 }

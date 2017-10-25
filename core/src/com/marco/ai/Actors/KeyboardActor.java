@@ -31,6 +31,9 @@ public class KeyboardActor implements ActorInterface {
     }
 
     @Override
+    public Vector2 getLinearVelocity() { return actor.getLinearVelocity(); }
+
+    @Override
     public void action() {
         keyboardAction();
     }
@@ -38,20 +41,19 @@ public class KeyboardActor implements ActorInterface {
     private void keyboardAction() {
         if ((Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT))
                 && actor.body.getLinearVelocity().x <= 2) {
-            log.info("moving left");
             actor.body.applyLinearImpulse(new Vector2(1f, 0f), actor.body.getWorldCenter(), true);
+            log.info("moving right with x velocity " + actor.body.getLinearVelocity().x);
         } else if ((Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT))
                 && actor.body.getLinearVelocity().x >= -2) {
-            log.info("moving right");
             actor.body.applyLinearImpulse(new Vector2(-1f, 0f), actor.body.getWorldCenter(), true);
+            log.info("moving right with x velocity " + actor.body.getLinearVelocity().x);
         }
         if ((Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.DPAD_UP))
                 && actor.body.getLinearVelocity().y <= 2) {
-                actor.body.applyLinearImpulse(new Vector2(0f, 0.1f), actor.body.getWorldCenter(), true);
+                actor.body.applyLinearImpulse(new Vector2(0f, 1f), actor.body.getWorldCenter(), true);
         } else if ((Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.DPAD_DOWN))
-                && actor.body.getLinearVelocity().y <= 2) {
-                actor.body.applyLinearImpulse(new Vector2(0f, -0.1f), actor.body.getWorldCenter(), true);
-
+                && actor.body.getLinearVelocity().y >= -2) {
+                actor.body.applyLinearImpulse(new Vector2(0f, -1f), actor.body.getWorldCenter(), true);
         }
     }
 }

@@ -6,9 +6,14 @@ import com.marco.ai.Screens.WorldScreen;
 
 public class MyGdxGame extends Game {
 	private SpriteBatch batch;
-	public static int V_WIDTH = 800;
-	public static int V_HEIGHT = 480;
-	public static int SCROLL_VELOCITY = 200;
+	public static final int V_WIDTH = 800;
+	public static final int V_HEIGHT = 480;
+	public static final float PPM = 16;
+	public static final float SCROLL_VELOCITY = 200/PPM;
+	public static final float SCROLLOVER = 100/PPM;
+
+	public static float scaleToPPM(int in) { return scaleToPPM(((float)in)); }
+	public static float scaleToPPM(float in) { return in/PPM; }
 
 	public MyGdxGame() {
 	}

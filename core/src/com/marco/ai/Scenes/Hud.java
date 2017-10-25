@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -21,10 +22,11 @@ public class Hud {
 
     private float[] camPositionValue;
     private float[] cursorPositionValue;
+    private Vector2 selectedActorVelocityValue;
 
     private Label camPosition;
     private Label cursorPosition;
-    private Label somemore;
+    private Label selectedActorVelocity;
 
     public Hud(SpriteBatch sb){
         vp = new FitViewport(MyGdxGame.V_WIDTH, MyGdxGame.V_HEIGHT, new OrthographicCamera());
@@ -36,14 +38,15 @@ public class Hud {
 
         camPositionValue = new float[] {0, 0};
         cursorPositionValue = new float[] {0, 0};
+        selectedActorVelocityValue = new Vector2(0,0);
 
         camPosition = new Label("CamPosition: ", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         cursorPosition = new Label("CamPosition: ", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        somemore = new Label("", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        selectedActorVelocity = new Label("SelectedActorVelocity: ", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
         table.add(camPosition).expandX().padTop(10);
         table.add(cursorPosition).expandX().padTop(10);
-        table.add(somemore).expandX().padTop(10);
+        table.add(selectedActorVelocity).expandX().padTop(10);
         table.row();
 
         stage.addActor(table);
@@ -59,10 +62,14 @@ public class Hud {
         cursorPositionValue[1] = y;
     }
 
+    public void setSelectedActorVelocity(Vector2 v) {
+        selectedActorVelocityValue = v;
+    }
+
     public void update() {
         camPosition.setText(String.format("CamPosition: %.2f,%.2f", camPositionValue[0],camPositionValue[1]));
         cursorPosition.setText(String.format("CursorPosition: %.0f,%.0f", cursorPositionValue[0],cursorPositionValue[1]));
-        somemore.setText("World!");
+        selectedActorVelocity.setText(String.format("SelectedActorVelocity: %.2f,%.2f", selectedActorVelocityValue.x, selectedActorVelocityValue.y));
     }
 
     public Stage getStage() {

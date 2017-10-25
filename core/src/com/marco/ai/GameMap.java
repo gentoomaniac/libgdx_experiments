@@ -45,7 +45,7 @@ public class GameMap {
         mapWidth = mapProps.get("width", Integer.class) * mapProps.get("tilewidth", Integer.class);
         mapHeight = mapProps.get("height", Integer.class) * mapProps.get("tileheight", Integer.class);
         log.info("Map dimensions: " + mapWidth + ", " + mapHeight);
-        renderer = new OrthogonalTiledMapRenderer(map);
+        renderer = new OrthogonalTiledMapRenderer(map, 1/MyGdxGame.PPM);
 
         box2dWorld = new World(new Vector2(0, 0), true);
         b2dr = new Box2DDebugRenderer();
@@ -61,8 +61,10 @@ public class GameMap {
     public void setView(OrthographicCamera cam) { renderer.setView(cam);}
 
     public void renderMap() { renderer.render(); }
-
     public void renderBox2d(final OrthographicCamera cam) { b2dr.render(box2dWorld, cam.combined);}
+    public void update() {
+        box2dWorld.step(1/60f, 6,2);
+    }
 
     public void setupColisionObjects() {
         BodyDef bdef = new BodyDef();
@@ -80,14 +82,14 @@ public class GameMap {
             for (MapObject object : map.getLayers().get(layer).getObjects()) {
                 if (object.getClass() == RectangleMapObject.class) {
                     rect = ((RectangleMapObject)object).getRectangle();
-                    bdef.position.set(rect.getX() + rect.getWidth() / 2, rect.getY() + rect.getHeight() / 2);
-                    polyShape.setAsBox(rect.getWidth() / 2, rect.getHeight() / 2);
+                    bdef.position.set(MyGdxGame.scaleToPPM(rect.getX() + rect.getWidth() / 2), MyGdxGame.scaleToPPM(rect.getY() + rect.getHeight() / 2));
+                    polyShape.setAsBox(MyGdxGame.scaleToPPM(rect.getWidth() / 2), MyGdxGame.scaleToPPM(rect.getHeight() / 2));
                     fdef.shape = polyShape;
-                    log.info("Created collision box at " + (rect.getX() + rect.getWidth() / 2) + "," + (rect.getY() + rect.getHeight() / 2));
+                    log.info("Created collision box at " + rect.getX() + rect.getWidth() / 2 + "," + rect.getY() + rect.getHeight() / 2);
                 } else if (object.getClass() == EllipseMapObject.class) {
                     ellipse = ((EllipseMapObject)object).getEllipse();
-                    bdef.position.set(ellipse.x + ellipse.width/2, ellipse.y + ellipse.width/2);
-                    circleShape.setRadius(ellipse.width/2);
+                    bdef.position.set(MyGdxGame.scaleToPPM(ellipse.x + ellipse.width/2), MyGdxGame.scaleToPPM(ellipse.y + ellipse.width/2));
+                    circleShape.setRadius(MyGdxGame.scaleToPPM(ellipse.width/2));
                     fdef.shape = circleShape;
                     log.info("Created collision circle at " + ellipse.x + "," + ellipse.y + " with radius " + ellipse.width/2);
                 }

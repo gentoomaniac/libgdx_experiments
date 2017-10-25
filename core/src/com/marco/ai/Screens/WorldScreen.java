@@ -1,5 +1,7 @@
 package com.marco.ai.Screens;
 
+import com.marco.ai.Actors.Actor;
+import com.marco.ai.Actors.ActorInterface;
 import com.marco.ai.Actors.KeyboardActor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +38,7 @@ public class WorldScreen implements Screen{
     private GameMap map;
 
     private ArrayList<KeyboardActor> actors;
+    private ActorInterface selectedActor;
 
 
     public WorldScreen(SpriteBatch sb) {
@@ -44,7 +47,7 @@ public class WorldScreen implements Screen{
         log = LoggerFactory.getLogger(WorldScreen.class);
 
         cam = new OrthographicCamera();
-        vp = new FitViewport(MyGdxGame.V_WIDTH, MyGdxGame.V_HEIGHT, cam);
+        vp = new FitViewport(MyGdxGame.scaleToPPM(MyGdxGame.V_WIDTH), MyGdxGame.scaleToPPM(MyGdxGame.V_HEIGHT), cam);
         hud = new Hud(batch);
 
         map = new GameMap("map.tmx");
@@ -56,8 +59,9 @@ public class WorldScreen implements Screen{
 
         actors = new ArrayList<>();
         KeyboardActor keyboardActor = new KeyboardActor();
-        keyboardActor.setBody(map.getNewBody(keyboardActor.getBdef(100f, 100f)), 10f);
+        keyboardActor.setBody(map.getNewBody(keyboardActor.getBdef(MyGdxGame.scaleToPPM(100f), MyGdxGame.scaleToPPM(100f))), MyGdxGame.scaleToPPM(10f));
         actors.add(keyboardActor);
+        selectedActor = keyboardActor;
     }
 
     @Override
@@ -71,35 +75,37 @@ public class WorldScreen implements Screen{
             a.action();
         }
 
+        map.update();
+
         cam.update();
         map.setView(cam);
         hud.updateCamPosition(cam.position.x, cam.position.y);
+        hud.setSelectedActorVelocity(selectedActor.getLinearVelocity());
         hud.update();
     }
 
-    // ToDO: Fix the scrolling limitations
     public void handleInput(float dt) {
         float diff = MyGdxGame.SCROLL_VELOCITY * dt;
 
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT)) {
-            if (cam.position.x + diff > map.getWidth() - vp.getWorldWidth()/2 + 100)
-                cam.position.x = map.getWidth() - vp.getWorldWidth()/2 + 100;
+            if (cam.position.x + diff > MyGdxGame.scaleToPPM(map.getWidth()) - vp.getWorldWidth()/2 + MyGdxGame.SCROLLOVER)
+                cam.position.x = MyGdxGame.scaleToPPM(map.getWidth()) - vp.getWorldWidth()/2 + MyGdxGame.SCROLLOVER;
             else
                 cam.position.x += diff;
         } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT)) {
-            if (cam.position.x - diff < vp.getWorldWidth() / 2 - 100)
-                cam.position.x = vp.getWorldWidth() / 2 - 100;
+            if (cam.position.x - diff < vp.getWorldWidth() / 2 - MyGdxGame.SCROLLOVER)
+                cam.position.x = vp.getWorldWidth() / 2 - MyGdxGame.SCROLLOVER;
             else
                 cam.position.x -= diff;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.DPAD_UP)) {
-            if (cam.position.y + diff > map.getHeight() - vp.getWorldHeight()/2 + 100)
-                cam.position.y = map.getHeight() - vp.getWorldHeight()/2 + 100;
+            if (cam.position.y + diff > MyGdxGame.scaleToPPM(map.getHeight()) - vp.getWorldHeight()/2 + MyGdxGame.SCROLLOVER)
+                cam.position.y = MyGdxGame.scaleToPPM(map.getHeight()) - vp.getWorldHeight()/2 + MyGdxGame.SCROLLOVER;
             else
                 cam.position.y += diff;
         } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.DPAD_DOWN)) {
-            if (cam.position.y - diff < vp.getWorldHeight()/2 - 100)
-                cam.position.y = vp.getWorldHeight()/2 - 100;
+            if (cam.position.y - diff < vp.getWorldHeight()/2 - MyGdxGame.SCROLLOVER)
+                cam.position.y = vp.getWorldHeight()/2 - MyGdxGame.SCROLLOVER;
             else
                 cam.position.y -= diff;
         }
