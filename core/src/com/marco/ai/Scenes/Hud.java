@@ -23,10 +23,12 @@ public class Hud {
     private float[] camPositionValue;
     private float[] cursorPositionValue;
     private Vector2 selectedActorVelocityValue;
+    private String trackedActorValue;
 
     private Label camPosition;
     private Label cursorPosition;
     private Label selectedActorVelocity;
+    private Label trackedActor;
 
     public Hud(SpriteBatch sb){
         vp = new FitViewport(MyGdxGame.V_WIDTH, MyGdxGame.V_HEIGHT, new OrthographicCamera());
@@ -39,15 +41,18 @@ public class Hud {
         camPositionValue = new float[] {0, 0};
         cursorPositionValue = new float[] {0, 0};
         selectedActorVelocityValue = new Vector2(0,0);
+        trackedActorValue = "";
 
         camPosition = new Label("CamPosition: ", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         cursorPosition = new Label("CamPosition: ", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         selectedActorVelocity = new Label("SelectedActorVelocity: ", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        trackedActor = new Label(trackedActorValue, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
         table.add(camPosition).expandX().padTop(10);
         table.add(cursorPosition).expandX().padTop(10);
         table.add(selectedActorVelocity).expandX().padTop(10);
         table.row();
+        table.add(trackedActor).expandX().;
 
         stage.addActor(table);
     }
@@ -66,10 +71,16 @@ public class Hud {
         selectedActorVelocityValue = v;
     }
 
+    public void updateSelectedActorName(String name) {
+        trackedActorValue = name;
+        trackedActor.setText(name);
+    }
+
     public void update() {
         camPosition.setText(String.format("CamPosition: %.2f,%.2f", camPositionValue[0],camPositionValue[1]));
         cursorPosition.setText(String.format("CursorPosition: %.0f,%.0f", cursorPositionValue[0],cursorPositionValue[1]));
         selectedActorVelocity.setText(String.format("SelectedActorVelocity: %.2f,%.2f", selectedActorVelocityValue.x, selectedActorVelocityValue.y));
+
     }
 
     public Stage getStage() {

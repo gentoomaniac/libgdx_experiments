@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.marco.ai.Actors.ActorInterface;
 import com.marco.ai.Actors.KeyboardActor;
+import com.marco.ai.Actors.KeyboardTurningActor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +40,7 @@ public class WorldScreen implements Screen{
     // Level
     private GameMap map;
 
-    private ArrayList<KeyboardActor> actors;
+    private ArrayList<ActorInterface> actors;
     private ActorInterface selectedActor;
 
     public WorldScreen(SpriteBatch sb) {
@@ -59,7 +60,7 @@ public class WorldScreen implements Screen{
         map.setupColisionObjects();
 
         actors = new ArrayList<>();
-        KeyboardActor keyboardActor = new KeyboardActor();
+        KeyboardTurningActor keyboardActor = new KeyboardTurningActor();
         keyboardActor.setBody(map.getNewBody(keyboardActor.getBdef(MyGdxGame.scaleToPPM(100f), MyGdxGame.scaleToPPM(100f))), MyGdxGame.scaleToPPM(10f));
         actors.add(keyboardActor);
         selectedActor = keyboardActor;
@@ -72,13 +73,16 @@ public class WorldScreen implements Screen{
 
     public void update(float dt) {
         handleInput(dt);
-        for(KeyboardActor a : actors) {
+        for(ActorInterface a : actors) {
             a.action();
         }
 
         if (selectedActor != null ) {
             cam.position.set(selectedActor.getPosition(), 0);
             hud.setSelectedActorVelocity(selectedActor.getLinearVelocity());
+            hud.updateSelectedActorName(selectedActor.getActor().getName());
+        } else {
+            hud.updateSelectedActorName("");
         }
         cam.update();
 
@@ -182,6 +186,7 @@ public class WorldScreen implements Screen{
             }
             if(!wasUpdated)
                 selectedActor = null;
+
         }
     }
 
