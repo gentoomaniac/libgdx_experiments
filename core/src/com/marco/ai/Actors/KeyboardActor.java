@@ -12,6 +12,12 @@ import org.slf4j.LoggerFactory;
  * Created by marco on 23/10/17.
  */
 public class KeyboardActor implements ActorInterface {
+    // To slow down the Actor when moving
+    private static final float LINEAR_DAMPING = 10;
+    // max velocity of the Actor
+    private static final float MAX_VELOCITY = 2f;
+    // steps at which velocity of the actor is increasing: acceleration
+    private static final float VELOCITY_STEPS = 0.2f;
 
     private Logger log;
 
@@ -23,7 +29,7 @@ public class KeyboardActor implements ActorInterface {
     }
 
     public BodyDef getBdef(float posX, float posY) {
-        return actor.getBdef(posX, posY);
+        return actor.getBdef(posX, posY, LINEAR_DAMPING);
     }
 
     public void setBody(Body body, float radius) {
@@ -40,24 +46,27 @@ public class KeyboardActor implements ActorInterface {
     public boolean testPoint(float x, float y) { return actor.testPoint(x, y); }
 
     @Override
+    public Actor getActor() { return actor; }
+
+    @Override
     public void action() {
         keyboardAction();
     }
 
     private void keyboardAction() {
         if ((Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT))
-                && actor.body.getLinearVelocity().x <= 2) {
-            actor.body.applyLinearImpulse(new Vector2(1f, 0f), actor.body.getWorldCenter(), true);
+                && actor.body.getLinearVelocity().x <= MAX_VELOCITY) {
+            actor.body.applyLinearImpulse(new Vector2(VELOCITY_STEPS, 0f), actor.body.getWorldCenter(), true);
         } else if ((Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT))
-                && actor.body.getLinearVelocity().x >= -2) {
-            actor.body.applyLinearImpulse(new Vector2(-1f, 0f), actor.body.getWorldCenter(), true);
+                && actor.body.getLinearVelocity().x >= -MAX_VELOCITY) {
+            actor.body.applyLinearImpulse(new Vector2(-VELOCITY_STEPS, 0f), actor.body.getWorldCenter(), true);
         }
         if ((Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.DPAD_UP))
-                && actor.body.getLinearVelocity().y <= 2) {
-                actor.body.applyLinearImpulse(new Vector2(0f, 1f), actor.body.getWorldCenter(), true);
+                && actor.body.getLinearVelocity().y <= MAX_VELOCITY) {
+                actor.body.applyLinearImpulse(new Vector2(0f, VELOCITY_STEPS), actor.body.getWorldCenter(), true);
         } else if ((Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.DPAD_DOWN))
-                && actor.body.getLinearVelocity().y >= -2) {
-                actor.body.applyLinearImpulse(new Vector2(0f, -1f), actor.body.getWorldCenter(), true);
+                && actor.body.getLinearVelocity().y >= -MAX_VELOCITY) {
+                actor.body.applyLinearImpulse(new Vector2(0f, -VELOCITY_STEPS), actor.body.getWorldCenter(), true);
         }
     }
 }

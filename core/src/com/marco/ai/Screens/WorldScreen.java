@@ -1,5 +1,6 @@
 package com.marco.ai.Screens;
 
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.marco.ai.Actors.ActorInterface;
@@ -40,7 +41,6 @@ public class WorldScreen implements Screen{
 
     private ArrayList<KeyboardActor> actors;
     private ActorInterface selectedActor;
-
 
     public WorldScreen(SpriteBatch sb) {
         batch = sb;
@@ -89,6 +89,51 @@ public class WorldScreen implements Screen{
         hud.update();
     }
 
+//    private void setupInputProcessor() {
+//        Gdx.input.setInputProcessor(new InputProcessor() {
+//            @Override
+//            public boolean keyDown(int keycode) {
+//                super
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean keyUp(int keycode) {
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean keyTyped(char character) {
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean touchDragged(int screenX, int screenY, int pointer) {
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean mouseMoved(int screenX, int screenY) {
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean scrolled(int amount) {
+//                return false;
+//            }
+//        });
+//    }
+
     public void handleInput(float dt) {
         float diff = MyGdxGame.SCROLL_VELOCITY * dt;
 
@@ -122,18 +167,21 @@ public class WorldScreen implements Screen{
         hud.updateCurserPosition(Gdx.input.getX(), Gdx.input.getY());
 
         // on touch check if an actor was touched and set/unset selectedActor
-        if(Gdx.input.isTouched()) {
-            selectedActor = null;
-            Vector3 v = cam.unproject(new Vector3(Gdx.input.getX(),Gdx.input.getY(), 0));
-            log.info("Click detected at " + Gdx.input.getX() + "," + Gdx.input.getY() + " mapping to world coordinates " + v.x + "," + v.y);
+        if(Gdx.input.justTouched()) {
+            boolean wasUpdated = false;
+            Vector3 v3 = cam.unproject(new Vector3(Gdx.input.getX(),Gdx.input.getY(), 0));
+            Vector2 v2 = new Vector2(v3.x, v3.y);
+            log.info("Click detected at " + Gdx.input.getX() + "," + Gdx.input.getY() + " mapping to world coordinates " + v2.x + "," + v2.y);
             for(ActorInterface act : actors) {
-                log.info("Checking if actor at " + act.getPosition().x + "," + act.getPosition().y + " was clicked ...");
-                if(act.testPoint(v.x, v.y)) {
-                    log.info("Found actor at " + act.getPosition().x + "," + act.getPosition().y);
+                if(v2.dst(act.getPosition()) <= act.getActor().getRadius()) {
+                    log.info("Found actor " + act.getActor().getName() + " at " + act.getPosition().x + "," + act.getPosition().y);
                     selectedActor = act;
+                    wasUpdated = true;
                     break;
                 }
             }
+            if(!wasUpdated)
+                selectedActor = null;
         }
     }
 

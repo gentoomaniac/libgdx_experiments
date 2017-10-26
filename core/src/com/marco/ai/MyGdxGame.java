@@ -8,7 +8,7 @@ public class MyGdxGame extends Game {
 	private SpriteBatch batch;
 	public static final int V_WIDTH = 800;
 	public static final int V_HEIGHT = 480;
-	public static final float PPM = 16;
+	public static final float PPM = 100;
 	public static final float SCROLL_VELOCITY = 200/PPM;
 	public static final float SCROLLOVER = 100/PPM;
 

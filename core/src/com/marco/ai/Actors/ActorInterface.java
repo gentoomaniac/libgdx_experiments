@@ -10,4 +10,5 @@ public interface ActorInterface {
     Vector2 getLinearVelocity();
     Vector2 getPosition();
     boolean testPoint(float x, float y);
+    Actor getActor();
 }
