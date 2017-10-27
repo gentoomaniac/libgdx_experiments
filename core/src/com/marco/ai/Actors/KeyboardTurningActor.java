@@ -34,14 +34,6 @@ public class KeyboardTurningActor implements ActorInterface {
         facingAngle = 0;
     }
 
-    public BodyDef getBdef(float posX, float posY) {
-        return actor.getBdef(posX, posY, LINEAR_DAMPING);
-    }
-
-    public void setBody(Body body, float radius) {
-        actor.setBody(body, radius);
-    }
-
     @Override
     public Vector2 getLinearVelocity() { return actor.body.getLinearVelocity(); }
 
@@ -55,8 +47,15 @@ public class KeyboardTurningActor implements ActorInterface {
     public Actor getActor() { return actor; }
 
     @Override
-    public void action() {
+    public void update(float dt) {
         keyboardAction();
+    }
+
+    public BodyDef getBdef(float posX, float posY) {
+        return actor.getBdef(posX, posY, LINEAR_DAMPING);
+    }
+    public void setBody(Body body, float radius) {
+        actor.setBody(body, radius);
     }
 
     private void keyboardAction() {

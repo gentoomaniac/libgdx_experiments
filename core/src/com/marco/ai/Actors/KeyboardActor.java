@@ -2,6 +2,7 @@ package com.marco.ai.Actors;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -23,9 +24,10 @@ public class KeyboardActor implements ActorInterface {
 
     private Actor actor;
 
-    public KeyboardActor() {
+    public KeyboardActor(TextureRegion tr) {
         log = LoggerFactory.getLogger(KeyboardActor.class);
         actor = new Actor();
+        actor.setTextureRegion(tr);
     }
 
     public BodyDef getBdef(float posX, float posY) {
@@ -49,8 +51,9 @@ public class KeyboardActor implements ActorInterface {
     public Actor getActor() { return actor; }
 
     @Override
-    public void action() {
+    public void update(float dt) {
         keyboardAction();
+        actor.update(dt);
     }
 
     private void keyboardAction() {

@@ -52,7 +52,7 @@ public class Hud {
         table.add(cursorPosition).expandX().padTop(10);
         table.add(selectedActorVelocity).expandX().padTop(10);
         table.row();
-        table.add(trackedActor).expandX().;
+        table.add(trackedActor).expandX();
 
         stage.addActor(table);
     }

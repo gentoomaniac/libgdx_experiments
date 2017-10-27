@@ -1,11 +1,10 @@
 package com.marco.ai.Screens;
 
-import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.marco.ai.Actors.ActorInterface;
 import com.marco.ai.Actors.KeyboardActor;
-import com.marco.ai.Actors.KeyboardTurningActor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +34,8 @@ public class WorldScreen implements Screen{
     private OrthographicCamera cam;
     private Viewport vp;
 
+    TextureAtlas ta;
+
     private Hud hud;
 
     // Level
@@ -48,6 +49,8 @@ public class WorldScreen implements Screen{
 
         log = LoggerFactory.getLogger(WorldScreen.class);
 
+        ta = new TextureAtlas("megaman.atlas");
+
         cam = new OrthographicCamera();
         vp = new FitViewport(MyGdxGame.scaleToPPM(MyGdxGame.V_WIDTH), MyGdxGame.scaleToPPM(MyGdxGame.V_HEIGHT), cam);
         hud = new Hud(batch);
@@ -60,9 +63,10 @@ public class WorldScreen implements Screen{
         map.setupColisionObjects();
 
         actors = new ArrayList<>();
-        KeyboardTurningActor keyboardActor = new KeyboardTurningActor();
+        KeyboardActor keyboardActor = new KeyboardActor(ta.findRegion("megaman7"));
         keyboardActor.setBody(map.getNewBody(keyboardActor.getBdef(MyGdxGame.scaleToPPM(100f), MyGdxGame.scaleToPPM(100f))), MyGdxGame.scaleToPPM(10f));
         actors.add(keyboardActor);
+
         selectedActor = keyboardActor;
     }
 
@@ -74,7 +78,7 @@ public class WorldScreen implements Screen{
     public void update(float dt) {
         handleInput(dt);
         for(ActorInterface a : actors) {
-            a.action();
+            a.update(dt);
         }
 
         if (selectedActor != null ) {
@@ -198,8 +202,14 @@ public class WorldScreen implements Screen{
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         map.renderMap();
-
         map.renderBox2d(cam);
+
+        batch.setProjectionMatrix(cam.combined);
+        batch.begin();
+        for(ActorInterface act : actors) {
+            act.getActor().draw(batch);
+        }
+        batch.end();
 
         batch.setProjectionMatrix(hud.getStage().getCamera().combined);
         hud.getStage().draw();
